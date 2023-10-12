@@ -25,6 +25,9 @@ plugins:
 #  - mermaid2
  - search
  - glightbox
+ - git-authors:
+    show_contribution: true
+    show_line_count: true
 
 markdown_extensions:
   - admonition
