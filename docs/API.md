@@ -462,8 +462,8 @@
 			"code": 0,
 			"info": "Get succeed",
 			"checks": [
-			{ "id": 0, "title": "第一项心智检查" },
-			{ "id": 1, "title": "第二项心智检查" },
+			{ "_id": "stringId", "title": "第一项心智检查" },
+			{ "_id": "stringId", "title": "第二项心智检查" },
 			],	//对象数组，每个对象代表一个检查模板，包含其id及标题信息
 		}
 		```
@@ -547,9 +547,9 @@
 	???todo "前端实现"
 		关于隐藏题的计算方法储存方式，前端实现可以自行确定。我建议的一种方式是使用后缀表达式并存储为string, 然后用{}/[]等不同类型的括号区分操作数的题号/常数。另一种方式是使用后缀表达式并预处理为string数组，在string的开头使用特殊符号区分操作数的题号/常数。
 
-- ### `<url>/check/{id}`
+- ### `<url>/check/{_id}`
 
-	该 API 用于操作由id确定的一个检查模板，包括获取、修改、删除检查模板。
+	该 API 用于操作由_id确定的一个检查模板，包括获取、修改、删除检查模板。此处的_id为string. 
 
 	#### GET
 	
@@ -601,7 +601,7 @@
   
 	#### POST
 	
-	医生调用时，对id为id的检查模板提出修改申请。管理员调用时，直接修改。
+	医生调用时，对_id为_id的检查模板提出修改申请。管理员调用时，直接修改。
 	
 	=== "请求头"
 	
@@ -667,7 +667,7 @@
 	
 	#### DELETE
 	
-	医生调用时，对id为id的检查模板提出删除申请。管理员调用时，直接删除这条检查模板。
+	医生调用时，对_id为_id的检查模板提出删除申请。管理员调用时，直接删除这条检查模板。
 
 	=== "请求头"
 	
@@ -728,8 +728,8 @@
 			"code": 0,
 			"info": "Get succeed",
 			"checks": [
-			{ "app_id": 0, "target_id": 0, "title": "第一项心智检查", "type": "create", "doctor": "userName" },
-			{ "app_id": 1, "target_id": 2, "title": "第二项心智检查", "type": "delete", "doctor": "userName" },
+			{ "_id": "stringId", "target_id": "stringId", "title": "第一项心智检查", "type": "create", "doctor": "userName" },
+			{ "_id": "stringId", "target_id": "stringId", "title": "第二项心智检查", "type": "delete", "doctor": "userName" },
 			],	//对象数组，每个对象代表一个检查模板申请，包含申请id, 目标模板id, 标题信息,申请类型以及申请者的用户名。申请类型的处理详见下方的前端实现。
 		}
 		```
@@ -742,10 +742,10 @@
 			"info": "[Some message]"
 		}
 		```
-		
-- ### `<url>/checkApply/{id}`
+	
+- ### `<url>/checkApply/{_id}`
 
-	该 API 用于操作由id确定的一条检查模板申请，包括获取、删除申请。
+	该 API 用于操作由_id确定的一条检查模板申请，包括获取、删除申请。此处的_id为string.
 
 	#### GET
 	
@@ -903,7 +903,7 @@
 		
 	???todo "可实现的其他功能"
 		增加申请时间的记录与显示。
-		
+	
 - ### `<url>/checkRes`
 
 	该 API 用于操作检查的整体，包括创建检查或按医生/病人查询检查。
@@ -920,8 +920,8 @@
 
 		```JSON
 		{
-			"patient_id": "就诊卡号",
-			"doctor": "userName",	//string, 医生用户名
+			"patient_id": "就诊卡号",	//设置为""以查询所有病人
+			"doctor": "userName",	//string, 医生用户名，设置为""以查询所有医生(仅管理员可用)
 		}
 		```
 
@@ -932,9 +932,9 @@
 			"code": 0,
 			"info": "Get succeed",
 			"checks": [
-			{ "id": 0, "title": "第一项心智检查", "patient": "patient_name1", "doctor": "userName", "creator": "userName", "done": true },
-			{ "id": 12, "title": "第二项心智检查", "patient": "patient_name2", "doctor": "userName", "creator": "userName," "done": false },
-			],	//根据请求体搜索得到的对象数组，每个对象代表一项检查，包含检查id, 标题信息, 患者名字，负责医生名字，创建者名字以及是否已完成。
+			{ "_id": "stringId", "title": "第一项心智检查", "patient_id": "patient_id1", "doctor": "userName", "creator": "userName", "done": true },
+			{ "_id": "stringId", "title": "第二项心智检查", "patient_id": "patient_id2", "doctor": "userName", "creator": "userName," "done": false },
+			],	//根据请求体搜索得到的对象数组，每个对象代表一项检查，包含检查id, 标题信息, 患者id，负责医生名字，创建者名字以及是否已完成。
 		}
 		```
 	
@@ -946,7 +946,7 @@
 			"info": "[Some message]"
 		}
 		```
-		
+	
 	#### POST
 	
 	根据检查模板id, 患者id以及所分配医生创建一项检查。
@@ -959,7 +959,7 @@
 
 		```JSON
 		{
-			"check_id": 0,	//int, 检查模板的id
+			"check_id": "stringId",	//string, 检查模板的_id
 			"patient_id": "就诊卡号",
 			"doctor": "userName",	//string, 分配医生用户名
 		}
@@ -982,14 +982,14 @@
 			"info": "[Some message]"
 		}
 		```
-		
-- ### `<url>/checkRes/{id}`
+	
+- ### `<url>/checkRes/{_id}`
 
-	该 API 用于操作由id确定的一项检查，包括获取、修改、删除检查。
+	该 API 用于操作由_id确定的一项检查，包括获取、修改、删除检查。此处的_id为string.
 
 	#### GET
 	
-	获取某项检查的具体信息。
+	获取某项检查的具体信息。医生只能看到自己创建或被分配的检查结果。
 
 	=== "请求头"
 	
@@ -1040,7 +1040,7 @@
 
 	#### POST
 	
-	完成一项还未完成的检查。医生只可完成分配给自己的检查。
+	完成一项还未完成的检查。医生只可完成分配给自己或自己创建的检查。
 	
 	=== "请求头"
 	
