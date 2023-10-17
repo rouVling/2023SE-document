@@ -52,10 +52,12 @@
 - ### 创建病历 `<url>/medRec`
 
 	该 API 用于创建一个id尚不存在的病历。
+	
+	#### POST
 
-	请求头<br>
-	需要将 `Authorization` 字段设置为 JWT 令牌<br>
-	使用 `POST` 请求
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
 
 	=== "请求体"
 
@@ -130,9 +132,9 @@
 
 	#### GET
 
-	请求头<br>
-	需要将 `Authorization` 字段设置为 JWT 令牌<br>
-	使用 `GET` 请求
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
 
 	=== "请求体"
 
@@ -185,9 +187,9 @@
   
 	#### POST
 	
-	请求头<br>
-	需要将 `Authorization` 字段设置为 JWT 令牌<br>
-	使用 `POST` 请求
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
 
 	=== "请求体"
   
@@ -437,10 +439,47 @@
 
 ## **检查模板**
 
-- ### 创建检查模板 `<url>/checkDoc`
+- ### `<url>/check`
 
-	该 API 用于医生向管理员申请创建一个id尚不存在的检查模板。
-	使用 `POST` 请求
+	该 API 用于操作检查模板的整体，包括医生向管理员申请创建检查模板或查询所有检查模板。
+	
+	#### GET
+	
+	获得所有检查模板的列表。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Get succeed",
+			"checks": [
+			{ "id": 0, "title": "第一项心智检查" },
+			{ "id": 1, "title": "第二项心智检查" },
+			],	//对象数组，每个对象代表一个检查模板，包含其id及标题信息
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+	
+	#### POST
+	
+	医生调用时，提出创建检查模板的申请。管理员调用时，直接创建。
 
 	=== "请求头"
 	
@@ -450,8 +489,7 @@
 
 		```JSON
 		{
-			"id": "由字母和数字组成的就诊卡号",
-			"title": "某患者的第一项心智检查",	//string, 
+			"title": "第一项心智检查",	//string, 
 			"questions": [ 
 			{ 
 			"index": 1,	//int, 问题的序号，与问卷中的显示同步
@@ -509,11 +547,13 @@
 	???todo "前端实现"
 		关于隐藏题的计算方法储存方式，前端实现可以自行确定。我建议的一种方式是使用后缀表达式并存储为string, 然后用{}/[]等不同类型的括号区分操作数的题号/常数。另一种方式是使用后缀表达式并预处理为string数组，在string的开头使用特殊符号区分操作数的题号/常数。
 
-- ### 获取/修改检查模板 `<url>/checkDoc/{id}`
+- ### `<url>/check/{id}`
 
 	该 API 用于操作由id确定的一个检查模板，包括获取、修改、删除检查模板。
 
 	#### GET
+	
+	获取某个检查模板的具体信息。
 
 	=== "请求头"
 	
@@ -529,7 +569,6 @@
 		{
 			"code": 0,
 			"info": "Get succeed",
-			"id": "由字母和数字组成的就诊卡号",
 			"title": "某患者的第一项心智检查",	//string, 
 			"questions": [ 
 			{ 
@@ -562,6 +601,8 @@
   
 	#### POST
 	
+	医生调用时，对id为id的检查模板提出修改申请。管理员调用时，直接修改。
+	
 	=== "请求头"
 	
 		需要将 `Authorization` 字段设置为 JWT 令牌
@@ -572,7 +613,6 @@
 		
 		```JSON
 		{
-			"id": "由字母和数字组成的就诊卡号",
 			"title": "某患者的第一项心智检查",	//string, 
 			"questions": [ 
 			{ 
@@ -626,6 +666,8 @@
 		```
 	
 	#### DELETE
+	
+	医生调用时，对id为id的检查模板提出删除申请。管理员调用时，直接删除这条检查模板。
 
 	=== "请求头"
 	
@@ -658,6 +700,206 @@
 		
 	???todo "前端实现"
 		注意在创建或修改检查模板时，若删除某一题目，其后面的所有题目index需要自减。如果有from_index在被删除题目之后的，其from_index同样需要自减。
+		可以在删除检查模板时增加二次确认。
 		
 	???question "可能需要的功能"
 		- 附件上传题的上传功能如何实现有待确认
+
+- ### `<url>/checkApply`
+
+	该 API 用于管理员操作检查模板的整体，包括直接创建检查模板或查询所有创建/修改/删除检查模板的申请。
+	
+	#### GET
+	
+	获得申请列表。医生用户只可查看自己提出的申请。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Get succeed",
+			"checks": [
+			{ "app_id": 0, "target_id": 0, "title": "第一项心智检查", "type": "create", "doctor": "userName" },
+			{ "app_id": 1, "target_id": 2, "title": "第二项心智检查", "type": "delete", "doctor": "userName" },
+			],	//对象数组，每个对象代表一个检查模板申请，包含申请id, 目标模板id, 标题信息,申请类型以及申请者的用户名。申请类型的处理详见下方的前端实现。
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+		
+- ### `<url>/checkApply/{id}`
+
+	该 API 用于操作由id确定的一条检查模板申请，包括获取、删除申请。
+
+	#### GET
+	
+	获取某条创建/修改检查模板申请的具体信息。医生只可查看自己提出的申请。
+
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Get succeed",
+			"title": "某患者的第一项心智检查",	//string, 
+			"questions": [ 
+			{ 
+			"index": 1,
+			"title": "标题1",
+			"question": "题干1",
+			"type": 1,
+			"fill_type": 0,
+			"choices": [ "选择1", "选择2", "选择3" ],
+			"from_index": 0,
+			"from_choice": 0,
+			"scores": [ 5, 1, 4 ],
+			"hidden": false,
+			"function": "",
+			}, 
+			],	//对象数组，每个对象代表一个检查模板中的问题
+			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+	#### POST
+	
+	修改一条申请的内容。医生只可修改自己提出的申请。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+		
+		```JSON
+		{
+			"title": "某患者的第一项心智检查",	//string, 
+			"questions": [ 
+			{ 
+			"index": 1,
+			"title": "标题1",
+			"question": "题干1",
+			"type": 1,
+			"fill_type": 0,
+			"choices": [ "选择1", "选择2", "选择3" ],
+			"from_index": 0,
+			"from_choice": 0,
+			"scores": [ 5, 1, 4 ],
+			"hidden": false,
+			"function": "",
+			}, 
+			{ 
+			"index": 2,
+			"title": "标题2",
+			"question": "题干2",
+			"type": 0,
+			"fill_type": 0,
+			"choices": [],
+			"from_index": 1,
+			"from_choice": 0,	//意味着如果患者在上面index为1的题目中选择了选择1, 则会补充出本题
+			"scores": [],
+			"hidden": false,
+			"function": "",
+			},
+			],	//对象数组，每个对象代表一个检查模板中的问题
+			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+		}
+		```
+	
+	=== "成功响应"
+	
+		```JSON
+		{
+			"code": 0,
+			"info": "Post succeed",
+		}
+		```
+	
+	=== "错误响应"
+	
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+	#### DELETE
+	
+	删除一条申请。医生只可删除自己提出的申请。
+
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Delete succeed",
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+	???todo "后端实现"
+		我将申请中的模板与申请完成的模板分为两个数据库存储。
+		check的POST(医生用户), check/{id}的POST(医生用户), checkApply的GET, checkApply/{id}的GET, POST和DELETE方法访问的是申请中数据库的内容。
+		check的GET, POST(管理员用户), check/{id}的GET, POST(管理员用户), DELETE(管理员用户)方法访问的是申请完成数据库的内容。
+
+	???todo "前端实现"
+		对于申请的不同类型，应当进行不同处理。进行这样处理的原因可见上面的后端实现。
+		对于create类型，在详细信息界面应当先调用checkApply/{app_id}的GET方法获得医生申请创建的检查模板的具体内容，展示给管理员。若同意申请，则将具体内容传入check的POST方法的请求体来创建一个检查模板。
+		对于post类型，在详细信息界面应当先调用checkApply/{app_id}的GET方法获得医生申请修改的检查模板的具体内容，展示给管理员。若同意申请，则将具体内容传入check/{target_id}的POST方法的请求体来修改一个检查模板。
+		对于delete类型，在详细信息界面应当先调用check/{target_id}的GET方法获得医生申请删除的检查模板的具体内容，展示给管理员。若同意申请，则调用check/{target_id}的DELETE方法删除这个检查模板。
+		若拒绝，对于三种类型来说，都调用checkApply/{app_id}的DELETE方法来删除这条申请。
+		
+	???todo "可实现的其他功能"
+		增加申请时间的记录与显示。
