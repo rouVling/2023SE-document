@@ -707,7 +707,7 @@
 
 - ### `<url>/checkApply`
 
-	该 API 用于管理员操作检查模板的整体，包括直接创建检查模板或查询所有创建/修改/删除检查模板的申请。
+	该 API 用于操作检查模板申请的整体，包括查询所有创建/修改/删除检查模板的申请。
 	
 	#### GET
 	
@@ -903,3 +903,235 @@
 		
 	???todo "可实现的其他功能"
 		增加申请时间的记录与显示。
+		
+- ### `<url>/checkRes`
+
+	该 API 用于操作检查的整体，包括创建检查或按医生/病人查询检查。
+	
+	#### GET
+	
+	获得检查列表。医生用户可以看到自己被分配的检查。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		```JSON
+		{
+			"patient_id": "就诊卡号",
+			"doctor": "userName",	//string, 医生用户名
+		}
+		```
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Get succeed",
+			"checks": [
+			{ "id": 0, "title": "第一项心智检查", "patient": "patient_name1", "doctor": "userName", "creator": "userName", "done": true },
+			{ "id": 12, "title": "第二项心智检查", "patient": "patient_name2", "doctor": "userName", "creator": "userName," "done": false },
+			],	//根据请求体搜索得到的对象数组，每个对象代表一项检查，包含检查id, 标题信息, 患者名字，负责医生名字，创建者名字以及是否已完成。
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+		
+	#### POST
+	
+	根据检查模板id, 患者id以及所分配医生创建一项检查。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		```JSON
+		{
+			"check_id": 0,	//int, 检查模板的id
+			"patient_id": "就诊卡号",
+			"doctor": "userName",	//string, 分配医生用户名
+		}
+		```
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Post succeed",
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+		
+- ### `<url>/checkRes/{id}`
+
+	该 API 用于操作由id确定的一项检查，包括获取、修改、删除检查。
+
+	#### GET
+	
+	获取某项检查的具体信息。
+
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Get succeed",
+			"title": "某患者的第一项心智检查",	//string, 
+			"questions": [ 
+			{ 
+			"index": 1,
+			"title": "标题1",
+			"question": "题干1",
+			"type": 1,
+			"fill_type": 0,
+			"choices": [ "选择1", "选择2", "选择3" ],
+			"from_index": 0,
+			"from_choice": 0,
+			"scores": [ 5, 1, 4 ],
+			"hidden": false,
+			"function": "",
+			"fill_answer": "",	//string, 填空题答案
+			"answer": 0,	//int, 选择题答案
+			}, 
+			],	//对象数组，每个对象代表一个检查模板中的问题
+			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+			"done": false,	//bool, 该项检查是否已完成
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+	#### POST
+	
+	完成一项还未完成的检查。医生只可完成分配给自己的检查。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+		
+		```JSON
+		{
+			"title": "某患者的第一项心智检查",	//string, 
+			"questions": [ 
+			{ 
+			"index": 1,
+			"title": "标题1",
+			"question": "题干1",
+			"type": 1,
+			"fill_type": 0,
+			"choices": [ "选择1", "选择2", "选择3" ],
+			"from_index": 0,
+			"from_choice": 0,
+			"scores": [ 5, 1, 4 ],
+			"hidden": false,
+			"function": "",
+			"fill_answer": "",	//string, 填空题答案
+			"answer": 0,	//int, 选择题答案
+			}, 
+			{ 
+			"index": 2,
+			"title": "标题2",
+			"question": "题干2",
+			"type": 0,
+			"fill_type": 0,
+			"choices": [],
+			"from_index": 1,
+			"from_choice": 0,	//意味着如果患者在上面index为1的题目中选择了选择1, 则会补充出本题
+			"scores": [],
+			"hidden": false,
+			"function": "",
+			"fill_answer": "这是一行答案文本。",	//string, 填空题答案
+			"answer": 0,	//int, 选择题答案
+			},
+			],	//对象数组，每个对象代表一个检查模板中的问题
+			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+			"time_limit": 9961,	//int, 最终完成检查时的时间。若为倒计时，可以是剩余时间。若为正计时，可以为所花时间。
+		}
+		```
+	
+	=== "成功响应"
+	
+		```JSON
+		{
+			"code": 0,
+			"info": "Post succeed",
+		}
+		```
+	
+	=== "错误响应"
+	
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+	#### DELETE
+	
+	删除一项检查。医生只可删除自己被分配到或自己创建的检查。
+
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Delete succeed",
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
