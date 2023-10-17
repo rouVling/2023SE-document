@@ -416,7 +416,7 @@
 
 ### 发放查看权限 `<url>/diagnose/grant`
 
-请求方法为 `GET`
+请求方法为 `POST`
 
 需要将 `Authorization` 字段设置为 JWT 令牌<br>
 
