@@ -43,9 +43,74 @@
 		- 医生端每次登录都更新token，实现三天不登录才需要重新登录
 		- [x] ~~支持用户名登录/工号登录~~ 使用唯一id即可
 
-- ### 注册 `<url>/register`
+- ### 注册或注销 `<url>/register`
 
-	格式同上 `登录` 部分
+	#### POST
+	
+	管理员注册一个新账号
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+	
+	=== "请求体"
+
+		```JSON
+		{
+			"userName": "rouVling",
+			"password": "de56ep24dark86fant53145asy"    //  MD5 值
+		}
+		```
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Succeed",
+			"token": "***.***.***" // JWT
+		}
+		```
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+	#### DELETE
+	
+	管理员注销一个已存在的账号
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+	
+	=== "请求体"
+
+		```JSON
+		{
+			"userName": "rouVling",
+		}
+		```
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Succeed",
+			"token": "***.***.***" // JWT
+		}
+		```
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
 
 ## **患者病历**
 
