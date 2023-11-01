@@ -116,7 +116,7 @@
 
 - ### 创建病历 `<url>/medRec`
 
-	该 API 用于创建一个id尚不存在的病历。
+	该 API 用于为患者增加一个新病历。若在此之前数据库中没有患者的信息，则患者的信息也会被同步录入。
 	
 	#### POST
 
@@ -186,14 +186,15 @@
 	???todo "前端实现"
 		整体上就是一个问卷，每个问题对应一个字段<br>
 		更具体内容可以看[需求文档](https://docs.qq.com/doc/DWkNSa0xEeE51eGti)
+		需要注意的是，对于首次录入的患者，需要提供完整的患者信息。而对于已经有病历，需要新增病历的患者，只需要提供"id"和病历表格中需要的信息即可。
 
 	???question "可能需要的功能"
 		- 后端检查是否有病历提醒是否覆盖
 		- 设置必填字段和可选字段
 
-- ### 获取/修改病历 `<url>/medRec/{id}`
+- ### 获取病历 `<url>/medRec/{_id}`
 
-	该 API 用于操作由id确定的一张具体病历，包括获取病历、修改病历。
+	该 API 用于获取由_id确定的一张具体病历。
 
 	#### GET
 
@@ -211,21 +212,9 @@
 		{
 			"code": 0,
 			"info": "Get succeed",
-			"id": "由字母和数字组成的就诊卡号",
-			"name": "Agile",	//	string, 姓名
 			"type": 1,	//	int, 0->正常人，1->患者
 			"coordination": 1,	//	int, 0->欠配合，1->配合
 			"coordinationDesc": "good coordination with doctor",	//	string, 配合描述
-			"gender": 1,	//	int, 0->男，1->女
-			"IDnumber": "身份证号",	//	string, 身份证号
-			"birth": "2023.7.4", //	string, 格式无所谓，统一就好，后端只储存字符串
-			"actBirth": "2023.7.5",	//	string, 实际出生日期
-			"appletId": "9961",	//	string, 小程序病人id
-			"hand": 1,	//	int, 0->左利手，1->右利手，2->双利手
-			"educated": 3,		//	int, 0->无，1->小学，2->初中，3->高中，4->本科及以上
-			"educatedYears": 10,//	int, 教育年限
-			"livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
-			"yearEducatedFift": 7,	//	int, 15岁之前受教育年限
 			"height": 170,	//	int, 身高
 			"weight": 100,	//	int, 体重
 			"stressImpact": 20,	//	int, 应激事件影响个数
@@ -237,7 +226,9 @@
 			"address": "string",	//	string, 居住地址
 			"telephone": "110",	//	string, 联系电话
 			"tcmDiagnosis": "string",	//	string, 中医辩证
-			"medicNum": "string" 	//	string, 病案号
+			"doctor": "username",	//	string, 创建该病历的医生用户名
+			"patient": "就诊卡号",	//	string, 该病历所属的病人id
+			"checks": [],	//	list<string>, 检查列表的str(_id)
 		}
 		```
 	
@@ -249,75 +240,6 @@
 			"info": "[Some message]"
 		}
 		```
-  
-	#### POST
-	
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
-
-	=== "请求体"
-  
-		```JSON
-		{
-			"id": "由字母和数字组成的就诊卡号",
-			"name": "Agile",	//	string, 姓名
-			"type": 1,	//	int, 0->正常人，1->患者
-			"coordination": 1,	//	int, 0->欠配合，1->配合
-			"coordinationDesc": "good coordination with doctor",	//	string, 配合描述
-			"gender": 1,	//	int, 0->男，1->女
-			"IDnumber": "身份证号",	//	string, 身份证号
-			"birth": "2023.7.4", //	string, 格式无所谓，统一就好，后端只储存字符串
-			"actBirth": "2023.7.5",	//	string, 实际出生日期
-			"appletId": "9961",	//	string, 小程序病人id
-			"hand": 1,	//	int, 0->左利手，1->右利手，2->双利手
-			"educated": 3,		//	int, 0->无，1->小学，2->初中，3->高中，4->本科及以上
-			"educatedYears": 10,//	int, 教育年限
-			"livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
-			"yearEducatedFift": 7,	//	int, 15岁之前受教育年限
-			"height": 170,	//	int, 身高
-			"weight": 100,	//	int, 体重
-			"stressImpact": 20,	//	int, 应激事件影响个数
-			"stressDesc": "string",	//	string, 应激事件描述
-			"dementiaHistoryID": 1,	//	int, 痴呆家族史，0->无，1->有，2->不详
-			"dementiaHistoryDesc": "string",	//	string, 痴呆家族史描述
-			"psychiatricHistoryID": 2,	//	int, 神经科其他疾病家族史, 0->无，1->有，2->不详
-			"psychiatricHistoryDesc": "string",	//	string, 神经科其他疾病家族史描述
-			"address": "string",	//	string, 居住地址
-			"telephone": "110",	//	string, 联系电话
-			"tcmDiagnosis": "string",	//	string, 中医辩证
-			"medicNum": "string" 	//	string, 病案号
-		}
-		```
-	
-	=== "成功响应"
-	
-		```JSON
-		{
-			"code": 0,
-			"info": "Post succeed",
-		}
-		```
-	=== "错误响应"
-	
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
-
-	???todo "后端实现"
-		后端需要解析成 json 然后在对应的表里面进行存储<br>
-		ERD 图暂时没有更新，请以当前 json 为准
-	
-	???todo "前端实现"
-		整体上就是一个问卷，每个问题对应一个字段<br>
-		更具体内容可以看[需求文档](https://docs.qq.com/doc/DWkNSa0xEeE51eGti)
-	
-	???question "可能需要的功能"
-		- 后端检查是否有病历提醒是否覆盖
-		- 设置必填字段和可选字段
 
 ## **患者列表**
 患者列表需要做
