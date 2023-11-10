@@ -261,7 +261,9 @@
 
 - ### 患者查询与筛选 `<url>/usr/patient`
 
-	请使用 `GET` 进行请求
+	该API用于获取医生所负责的患者的信息。
+
+	#### `GET`
 
 	===	"请求头"
 
@@ -271,26 +273,24 @@
 
 		```json
 		{
-			"userName": "doctor's name",
-			"filter": 
-			{
-				"id": "卡号",
-				"type": 1,	//	int, 0->正常人，1->患者
-				"coordination": 1,	//	int, 0->欠配合，1->配合
-				"gender": 1,	//	int, 0->男，1->女
-				"hand": 1,	//	int, 0->左利手，1->右利手，2->双利手
-				"educated": 3,		//	int, 0->无，1->小学，2->初中，3->高中，4->本科及以上
-				"educatedYears": 10,//	int, 教育年限
-				"livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
-				"stressImpact": 20,	//	int, 应激事件影响个数
-				"dementiaHistoryID": 1,	//	int, 痴呆家族史，0->无，1->有，2->不详
-				"psychiatricHistoryID": 2,	//	int, 神经科其他疾病家族史, 0->无，1->有，2->不详
-			}
+            "id": "卡号",
+            "name": "姓名",
+            "gender": 1,
+            "IDnumber": "str",
+            "birth": "",
+            "actBirth": "",
+            "appletId": "",
+            "hand": 1,	//	int, 0->左利手，1->右利手，2->双利手
+            "educated": 3,		//	int, 0->无，1->小学，2->初中，3->高中，4->本科及以上
+            "educatedYears": 10,//	int, 教育年限
+            "livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
+            "yearEducatedFift": 8,
+            "medicNum": ""
 		}
 		```
 		
 		!!!note "发送请求请注意"
-			- `filter` 不是所有都是必填字段，请按照用户的输入决定是否有
+			- 不是所有都是必填字段，请按照用户的输入决定是否有。以上列出了所有可作为filter的字段。
 			- `filter` 中，`id` 和 `其他字段` 不要同时出现，`id` 为查询使用，`其他字段`为筛选时候使用
 			- 如果筛选条件太多，输入框太多不好看的话，可以加一个展开更多的选项，将一些不常用的筛选条件放里面
 		
@@ -302,22 +302,17 @@
 
 	=== "成功响应"
 	
-		返回 `就诊卡号、姓名、性别、年龄、病历创建日期、最近就诊日期、主治医生ID`
+		返回该病人表格的所有内容。病人表格详见后端细节。
 	
 		```json
 		{
 			"code": 0,
 			"info": "Succeed",
-			"userName": "rho",
 			"patients": [
 				{
 					"id": "就诊卡号",
 					"name": "姓名",
-					"gender": 0,	// 0->男 1->女
-					"age": -100,
-					"createdAt": "894659854",	//	timestamp,同小作业
-					"lastDiagnosed": "51846513",	//	timestamp
-					"doctorID": "主治医生ID"
+					// ...
 				},
 				//	...
 			]
