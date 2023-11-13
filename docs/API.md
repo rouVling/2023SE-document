@@ -273,19 +273,19 @@
 
 		```json
 		{
-            "id": "卡号",
-            "name": "姓名",
-            "gender": 1,
-            "IDnumber": "str",
-            "birth": "",
-            "actBirth": "",
-            "appletId": "",
-            "hand": 1,	//	int, 0->左利手，1->右利手，2->双利手
-            "educated": 3,		//	int, 0->无，1->小学，2->初中，3->高中，4->本科及以上
-            "educatedYears": 10,//	int, 教育年限
-            "livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
-            "yearEducatedFift": 8,
-            "medicNum": ""
+  	      "id": "卡号",
+  	      "name": "姓名",
+  	      "gender": 1,
+  	      "IDnumber": "str",
+  	      "birth": "",
+  	      "actBirth": "",
+  	      "appletId": "",
+  	      "hand": 1,	//	int, 0->左利手，1->右利手，2->双利手
+  	      "educated": 3,		//	int, 0->无，1->小学，2->初中，3->高中，4->本科及以上
+  	      "educatedYears": 10,//	int, 教育年限
+  	      "livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
+  	      "yearEducatedFift": 8,
+  	      "medicNum": ""
 		}
 		```
 		
@@ -767,6 +767,9 @@
 			],	//对象数组，每个对象代表一个检查模板中的问题
 			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
 			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+			"target_id": "strId",
+			"type": "create",
+            "doctor": "userName",
 		}
 		```
 	
