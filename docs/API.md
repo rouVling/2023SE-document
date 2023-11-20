@@ -245,7 +245,7 @@
 		}
 		```
 
-- ### 获取病人A的_id:time `<url>/medRec/{id}`
+- ### 获取病人A的_id:time `<url>/RecordList/{id}`
 
 	该 API 用于获取由id确定的病人的所有_id:time对
 
