@@ -198,56 +198,57 @@
 
 - ### 获取病历 `<url>/medRec/{_id}`
 
-	该 API 用于获取由_id确定的一张具体病历。
+  该 API 用于获取由_id确定的一张具体病历。
 
-	#### GET
+  #### GET
 
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
+  === "请求头"
 
-	=== "请求体"
+  	需要将 `Authorization` 字段设置为 JWT 令牌
 
-		本方法不需要提供任何请求体
+  === "请求体"
 
-	=== "成功响应"
+  	本方法不需要提供任何请求体
 
-		```JSON
-		{
-			"code": 0,
-			"info": "Get succeed",
-			"type": 1,	//	int, 0->正常人，1->患者
-			"coordination": 1,	//	int, 0->欠配合，1->配合
-			"coordinationDesc": "good coordination with doctor",	//	string, 配合描述
-			"height": 170,	//	int, 身高
-			"weight": 100,	//	int, 体重
-			"stressImpact": 20,	//	int, 应激事件影响个数
-			"stressDesc": "string",	//	string, 应激事件描述
-			"dementiaHistoryID": 1,	//	int, 痴呆家族史，0->无，1->有，2->不详
-			"dementiaHistoryDesc": "string",	//	string, 痴呆家族史描述
-			"psychiatricHistoryID": 2,	//	int, 神经科其他疾病家族史, 0->无，1->有，2->不详
-			"psychiatricHistoryDesc": "string",	//	string, 神经科其他疾病家族史描述
-			"address": "string",	//	string, 居住地址
-			"telephone": "110",	//	string, 联系电话
-			"tcmDiagnosis": "string",	//	string, 中医辩证
-			"doctor": "username",	//	string, 创建该病历的医生用户名
-			"patient": "就诊卡号",	//	string, 该病历所属的病人id
-			"checks": [],	//	list<string>, 检查列表的str(_id)
-		}
-		```
-	
-	=== "错误响应"
+  === "成功响应"
 
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
+  	```JSON
+  	{
+  		"code": 0,
+  		"info": "Get succeed",
+  		"type": 1,	//	int, 0->正常人，1->患者
+  		"coordination": 1,	//	int, 0->欠配合，1->配合
+  		"coordinationDesc": "good coordination with doctor",	//	string, 配合描述
+  		"height": 170,	//	int, 身高
+  		"weight": 100,	//	int, 体重
+  		"stressImpact": 20,	//	int, 应激事件影响个数
+  		"stressDesc": "string",	//	string, 应激事件描述
+  		"dementiaHistoryID": 1,	//	int, 痴呆家族史，0->无，1->有，2->不详
+  		"dementiaHistoryDesc": "string",	//	string, 痴呆家族史描述
+  		"psychiatricHistoryID": 2,	//	int, 神经科其他疾病家族史, 0->无，1->有，2->不详
+  		"psychiatricHistoryDesc": "string",	//	string, 神经科其他疾病家族史描述
+  		"address": "string",	//	string, 居住地址
+  		"telephone": "110",	//	string, 联系电话
+  		"tcmDiagnosis": "string",	//	string, 中医辩证
+  		"doctor": "username",	//	string, 创建该病历的医生用户名
+  		"patient": "就诊卡号",	//	string, 该病历所属的病人id
+  		"time": "2023-11-09-09-05",	//	string, Y-M-D-H-M
+  		"checks": [],	//	list<string>, 检查列表的str(_id)
+  	}
+  	```
+
+  === "错误响应"
+
+  	```JSON
+  	{
+  		"code": *,
+  		"info": "[Some message]"
+  	}
+  	```
 
 - ### 获取病人A的_id:time `<url>/RecordList/{id}`
 
-	该 API 用于获取由id确定的病人的所有_id:time对
+	该 API 用于获取由id确定的病人的所有_id: time对。按时间降序排列。
 
 	#### GET
 
@@ -263,8 +264,8 @@
 
 		```JSON
 		{
-			"2023-11-20-12-22":"_id1",
-			"2023-11-19-12-22":"_id2",
+			"_id1":"2023-11-20-12-22",
+			"_id2":"2023-11-19-12-22",
 			// ...
 		}
 		```
@@ -805,7 +806,7 @@
 			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
 			"target_id": "strId",
 			"type": "create",
-            "doctor": "userName",
+  	      "doctor": "userName",
 		}
 		```
 	
