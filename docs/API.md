@@ -157,6 +157,7 @@
 			"telephone": "110",	//	string, 联系电话
 			"tcmDiagnosis": "string",	//	string, 中医辩证
 			"medicNum": "string" 	//	string, 病案号
+			"time":"string"
 		}
 		```
 
@@ -178,6 +179,9 @@
 			"info": "[Some message]"
 		}
 		```
+
+	???todo "time格式(string)"
+		YEAR-MO-DA-HO-MI
 
 	???todo "后端实现"
 		后端需要解析成 json 然后在对应的表里面进行存储<br>
@@ -241,6 +245,38 @@
 		}
 		```
 
+- ### 获取病人A的_id:time `<url>/medRec/{id}`
+
+	该 API 用于获取由id确定的病人的所有_id:time对
+
+	#### GET
+
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		本方法不需要提供任何请求体
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"2023-11-20-12-22":"_id1",
+			"2023-11-19-12-22":"_id2",
+			// ...
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
 ## **患者列表**
 患者列表需要做
 
