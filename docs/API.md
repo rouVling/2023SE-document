@@ -464,269 +464,272 @@
 
 - ### `<url>/check`
 
-	该 API 用于操作检查模板的整体，包括医生向管理员申请创建检查模板或查询所有检查模板。
-	
-	#### GET
-	
-	获得所有检查模板的列表。
-	
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
+  该 API 用于操作检查模板的整体，包括医生向管理员申请创建检查模板或查询所有检查模板。
 
-	=== "请求体"
+  #### GET
 
-		本方法不需要提供任何请求体
+  获得所有检查模板的列表。
 
-	=== "成功响应"
+  === "请求头"
 
-		```JSON
-		{
-			"code": 0,
-			"info": "Get succeed",
-			"checks": [
-			{ "_id": "stringId", "title": "第一项心智检查" },
-			{ "_id": "stringId", "title": "第二项心智检查" },
-			],	//对象数组，每个对象代表一个检查模板，包含其id及标题信息
-		}
-		```
-	
-	=== "错误响应"
+  	需要将 `Authorization` 字段设置为 JWT 令牌
 
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
-	
-	#### POST
-	
-	医生调用时，提出创建检查模板的申请。管理员调用时，直接创建。
+  === "请求体"
 
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
+  	本方法不需要提供任何请求体
 
-	=== "请求体"
+  === "成功响应"
 
-		```JSON
-		{
-			"title": "第一项心智检查",	//string, 
-			"questions": [ 
-			{ 
-			"index": 1,	//int, 问题的序号，与问卷中的显示同步
-			"title": "标题1",	//string, 问题的题目标题，见需求文档
-			"question": "题干1", 	//string, 问题的题目描述
-			"type": 1,	//int, 问题的种类，0<-填空题，1<-选择题，2<-上传附件题
-			"fill_type": 0,	//int, 若是填空题，需要的数据规范检查类型，0<-不需要，1<-日期，2<-纯数字(如年龄)
-			"choices": [ "选择1", "选择2", "选择3" ],	//string数组，元素按顺序代表选项文字
-			"from_index": 0,	//int, 如果本题是选择补充题，则为派生出本题的选择题的index. 否则置0
-			"from_choice": 0,	//int, 如果本题是选择补充题，则为派生出本题的选择题的选择支id, 即对应的choices元素下标
-			"scores": [ 5, 1, 4 ],	//int数组，如果本题是选择题，则为各选项得分，与choices一一对应
-			"hidden": false,	//bool, 是否为隐藏题目
-			"function": "",	//string, 若为隐藏题，则该题的计算方法，详见下方的前端实现
-			}, 
-			{ 
-			"index": 2,
-			"title": "标题2",
-			"question": "题干2",
-			"type": 0,
-			"fill_type": 0,
-			"choices": [],
-			"from_index": 1,
-			"from_choice": 0,	//意味着如果患者在上面index为1的题目中选择了选择1, 则会补充出本题
-			"scores": [],
-			"hidden": false,
-			"function": "",
-			},
-			],	//对象数组，每个对象代表一个检查模板中的问题
-			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
-			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
-		}
-		```
+  	```JSON
+  	{
+  		"code": 0,
+  		"info": "Get succeed",
+  		"checks": [
+  		{ "_id": "stringId", "title": "第一项心智检查" },
+  		{ "_id": "stringId", "title": "第二项心智检查" },
+  		],	//对象数组，每个对象代表一个检查模板，包含其id及标题信息
+  	}
+  	```
 
-	=== "成功响应"
+  === "错误响应"
 
-		```JSON
-		{
-			"code": 0,
-			"info": "Post succeed",
-		}
-		```
-	
-	=== "错误响应"
+  	```JSON
+  	{
+  		"code": *,
+  		"info": "[Some message]"
+  	}
+  	```
 
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
+  #### POST
 
-	???todo "后端实现"
-		提出申请即在管理员的审核页面中增加一条申请，管理员需要在审核页面中同意或拒绝，若同意则按照请求体中的内容创建一个检查模板。
+  医生调用时，提出创建检查模板的申请。管理员调用时，直接创建。
 
-	???todo "前端实现"
-		关于隐藏题的计算方法储存方式，前端实现可以自行确定。我建议的一种方式是使用后缀表达式并存储为string, 然后用{}/[]等不同类型的括号区分操作数的题号/常数。另一种方式是使用后缀表达式并预处理为string数组，在string的开头使用特殊符号区分操作数的题号/常数。
+  === "请求头"
+
+  	需要将 `Authorization` 字段设置为 JWT 令牌
+
+  === "请求体"
+
+  	```JSON
+  	{
+  		"title": "第一项心智检查",	//string, 
+  		"questions": [ 
+  		{ 
+  		"index": 1,	//int, 问题的序号，与问卷中的显示同步
+  		"title": "标题1",	//string, 问题的题目标题，见需求文档
+  		"question": "题干1", 	//string, 问题的题目描述
+  		"type": 1,	//int, 问题的种类，0<-填空题，1<-选择题，2<-上传附件题
+  		"fill_type": 0,	//int, 若是填空题，需要的数据规范检查类型，0<-不需要，1<-日期，2<-纯数字(如年龄)
+  		"choices": [ "选择1", "选择2", "选择3" ],	//string数组，元素按顺序代表选项文字
+  		"from_index": 0,	//int, 如果本题是选择补充题，则为派生出本题的选择题的index. 否则置0
+  		"from_choice": 0,	//int, 如果本题是选择补充题，则为派生出本题的选择题的选择支id, 即对应的choices元素下标
+  		"scores": [ 5, 1, 4 ],	//int数组，如果本题是选择题，则为各选项得分，与choices一一对应
+  		"hidden": false,	//bool, 是否为隐藏题目
+  		"function": "",	//string, 若为隐藏题，则该题的计算方法，详见下方的前端实现
+  		}, 
+  		{ 
+  		"index": 2,
+  		"title": "标题2",
+  		"question": "题干2",
+  		"type": 0,
+  		"fill_type": 0,
+  		"choices": [],
+  		"from_index": 1,
+  		"from_choice": 0,	//意味着如果患者在上面index为1的题目中选择了选择1, 则会补充出本题
+  		"scores": [],
+  		"hidden": false,
+  		"function": "",
+  		},
+  		],	//对象数组，每个对象代表一个检查模板中的问题
+  		"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+  		"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+  		"doctor": "Hideyoshi", //str, 创建医生的用户名
+  	}
+  	```
+
+  === "成功响应"
+
+  	```JSON
+  	{
+  		"code": 0,
+  		"info": "Post succeed",
+  	}
+  	```
+
+  === "错误响应"
+
+  	```JSON
+  	{
+  		"code": *,
+  		"info": "[Some message]"
+  	}
+  	```
+
+  ???todo "后端实现"
+  	提出申请即在管理员的审核页面中增加一条申请，管理员需要在审核页面中同意或拒绝，若同意则按照请求体中的内容创建一个检查模板。
+
+  ???todo "前端实现"
+  	关于隐藏题的计算方法储存方式，前端实现可以自行确定。我建议的一种方式是使用后缀表达式并存储为string, 然后用{}/[]等不同类型的括号区分操作数的题号/常数。另一种方式是使用后缀表达式并预处理为string数组，在string的开头使用特殊符号区分操作数的题号/常数。
 
 - ### `<url>/check/{_id}`
 
-	该 API 用于操作由_id确定的一个检查模板，包括获取、修改、删除检查模板。此处的_id为string. 
+  该 API 用于操作由_id确定的一个检查模板，包括获取、修改、删除检查模板。此处的_id为string. 
 
-	#### GET
-	
-	获取某个检查模板的具体信息。
+  #### GET
 
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
+  获取某个检查模板的具体信息。
 
-	=== "请求体"
+  === "请求头"
 
-		本方法不需要提供任何请求体
+  	需要将 `Authorization` 字段设置为 JWT 令牌
 
-	=== "成功响应"
+  === "请求体"
 
-		```JSON
-		{
-			"code": 0,
-			"info": "Get succeed",
-			"title": "某患者的第一项心智检查",	//string, 
-			"questions": [ 
-			{ 
-			"index": 1,
-			"title": "标题1",
-			"question": "题干1",
-			"type": 1,
-			"fill_type": 0,
-			"choices": [ "选择1", "选择2", "选择3" ],
-			"from_index": 0,
-			"from_choice": 0,
-			"scores": [ 5, 1, 4 ],
-			"hidden": false,
-			"function": "",
-			}, 
-			],	//对象数组，每个对象代表一个检查模板中的问题
-			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
-			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
-		}
-		```
-	
-	=== "错误响应"
+  	本方法不需要提供任何请求体
 
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
-  
-	#### POST
-	
-	医生调用时，对_id为_id的检查模板提出修改申请。管理员调用时，直接修改。
-	
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
+  === "成功响应"
 
-	=== "请求体"
-		
-		格式同创建时的请求体
-		
-		```JSON
-		{
-			"title": "某患者的第一项心智检查",	//string, 
-			"questions": [ 
-			{ 
-			"index": 1,
-			"title": "标题1",
-			"question": "题干1",
-			"type": 1,
-			"fill_type": 0,
-			"choices": [ "选择1", "选择2", "选择3" ],
-			"from_index": 0,
-			"from_choice": 0,
-			"scores": [ 5, 1, 4 ],
-			"hidden": false,
-			"function": "",
-			}, 
-			{ 
-			"index": 2,
-			"title": "标题2",
-			"question": "题干2",
-			"type": 0,
-			"fill_type": 0,
-			"choices": [],
-			"from_index": 1,
-			"from_choice": 0,	//意味着如果患者在上面index为1的题目中选择了选择1, 则会补充出本题
-			"scores": [],
-			"hidden": false,
-			"function": "",
-			},
-			],	//对象数组，每个对象代表一个检查模板中的问题
-			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
-			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
-		}
-		```
-	
-	=== "成功响应"
-	
-		```JSON
-		{
-			"code": 0,
-			"info": "Post succeed",
-		}
-		```
-	
-	=== "错误响应"
-	
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
-	
-	#### DELETE
-	
-	医生调用时，对_id为_id的检查模板提出删除申请。管理员调用时，直接删除这条检查模板。
+  	```JSON
+  	{
+  		"code": 0,
+  		"info": "Get succeed",
+  		"title": "某患者的第一项心智检查",	//string, 
+  		"questions": [ 
+  		{ 
+  		"index": 1,
+  		"title": "标题1",
+  		"question": "题干1",
+  		"type": 1,
+  		"fill_type": 0,
+  		"choices": [ "选择1", "选择2", "选择3" ],
+  		"from_index": 0,
+  		"from_choice": 0,
+  		"scores": [ 5, 1, 4 ],
+  		"hidden": false,
+  		"function": "",
+  		}, 
+  		],	//对象数组，每个对象代表一个检查模板中的问题
+  		"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+  		"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+  		"doctor": "Hideyoshi", //str, 创建医生的用户名
+  	}
+  	```
 
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
+  === "错误响应"
 
-	=== "请求体"
+  	```JSON
+  	{
+  		"code": *,
+  		"info": "[Some message]"
+  	}
+  	```
 
-		本方法不需要提供任何请求体
+  #### POST
 
-	=== "成功响应"
+  医生调用时，对_id为_id的检查模板提出修改申请。管理员调用时，直接修改。
 
-		```JSON
-		{
-			"code": 0,
-			"info": "Delete succeed",
-		}
-		```
-	
-	=== "错误响应"
+  === "请求头"
 
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
+  	需要将 `Authorization` 字段设置为 JWT 令牌
 
-	???todo "后端实现"
-		提出申请即在管理员的审核页面中增加一条申请，管理员需要在审核页面中同意或拒绝，若同意则按照请求体中的内容修改或删除一个检查模板。获取则不需要申请。
-		
-	???todo "前端实现"
-		注意在创建或修改检查模板时，若删除某一题目，其后面的所有题目index需要自减。如果有from_index在被删除题目之后的，其from_index同样需要自减。
-		可以在删除检查模板时增加二次确认。
-		
-	???question "可能需要的功能"
-		- 附件上传题的上传功能如何实现有待确认
+  === "请求体"
+  	
+  	格式同创建时的请求体
+  	
+  	```JSON
+  	{
+  		"title": "某患者的第一项心智检查",	//string, 
+  		"questions": [ 
+  		{ 
+  		"index": 1,
+  		"title": "标题1",
+  		"question": "题干1",
+  		"type": 1,
+  		"fill_type": 0,
+  		"choices": [ "选择1", "选择2", "选择3" ],
+  		"from_index": 0,
+  		"from_choice": 0,
+  		"scores": [ 5, 1, 4 ],
+  		"hidden": false,
+  		"function": "",
+  		}, 
+  		{ 
+  		"index": 2,
+  		"title": "标题2",
+  		"question": "题干2",
+  		"type": 0,
+  		"fill_type": 0,
+  		"choices": [],
+  		"from_index": 1,
+  		"from_choice": 0,	//意味着如果患者在上面index为1的题目中选择了选择1, 则会补充出本题
+  		"scores": [],
+  		"hidden": false,
+  		"function": "",
+  		},
+  		],	//对象数组，每个对象代表一个检查模板中的问题
+  		"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
+  		"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+  		"doctor": "Hideyoshi", //str, 创建医生的用户名
+  	}
+  	```
+
+  === "成功响应"
+
+  	```JSON
+  	{
+  		"code": 0,
+  		"info": "Post succeed",
+  	}
+  	```
+
+  === "错误响应"
+
+  	```JSON
+  	{
+  		"code": *,
+  		"info": "[Some message]"
+  	}
+  	```
+
+  #### DELETE
+
+  医生调用时，对_id为_id的检查模板提出删除申请。管理员调用时，直接删除这条检查模板。
+
+  === "请求头"
+
+  	需要将 `Authorization` 字段设置为 JWT 令牌
+
+  === "请求体"
+
+  	本方法不需要提供任何请求体
+
+  === "成功响应"
+
+  	```JSON
+  	{
+  		"code": 0,
+  		"info": "Delete succeed",
+  	}
+  	```
+
+  === "错误响应"
+
+  	```JSON
+  	{
+  		"code": *,
+  		"info": "[Some message]"
+  	}
+  	```
+
+  ???todo "后端实现"
+  	提出申请即在管理员的审核页面中增加一条申请，管理员需要在审核页面中同意或拒绝，若同意则按照请求体中的内容修改或删除一个检查模板。获取则不需要申请。
+  	
+  ???todo "前端实现"
+  	注意在创建或修改检查模板时，若删除某一题目，其后面的所有题目index需要自减。如果有from_index在被删除题目之后的，其from_index同样需要自减。
+  	可以在删除检查模板时增加二次确认。
+  	
+  ???question "可能需要的功能"
+  	- 附件上传题的上传功能如何实现有待确认
 
 - ### `<url>/checkApply`
 
@@ -808,7 +811,7 @@
 			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
 			"target_id": "strId",
 			"type": "create",
-            "doctor": "userName",
+  	    "doctor": "userName",
 		}
 		```
 	
@@ -864,6 +867,7 @@
 			],	//对象数组，每个对象代表一个检查模板中的问题
 			"timer": 0,	//int, 0<-不计时，1<-正计时，2<-倒计时
 			"time_limit": 9961,	//int, timer为倒计时的计时起始时间，单位前端自定
+			"doctor": "Hideyoshi", //str, 创建医生的用户名
 		}
 		```
 	
@@ -884,21 +888,21 @@
 			"info": "[Some message]"
 		}
 		```
-
+	
 	#### DELETE
 	
 	删除一条申请。医生只可删除自己提出的申请。
-
+	
 	=== "请求头"
 	
 		需要将 `Authorization` 字段设置为 JWT 令牌
-
+	
 	=== "请求体"
-
+	
 		本方法不需要提供任何请求体
-
+	
 	=== "成功响应"
-
+	
 		```JSON
 		{
 			"code": 0,
@@ -907,19 +911,19 @@
 		```
 	
 	=== "错误响应"
-
+	
 		```JSON
 		{
 			"code": *,
 			"info": "[Some message]"
 		}
 		```
-
+	
 	???todo "后端实现"
 		我将申请中的模板与申请完成的模板分为两个数据库存储。
 		check的POST(医生用户), check/{id}的POST(医生用户), checkApply的GET, checkApply/{id}的GET, POST和DELETE方法访问的是申请中数据库的内容。
 		check的GET, POST(管理员用户), check/{id}的GET, POST(管理员用户), DELETE(管理员用户)方法访问的是申请完成数据库的内容。
-
+	
 	???todo "前端实现"
 		对于申请的不同类型，应当进行不同处理。进行这样处理的原因可见上面的后端实现。
 		对于create类型，在详细信息界面应当先调用checkApply/{app_id}的GET方法获得医生申请创建的检查模板的具体内容，展示给管理员。若同意申请，则将具体内容传入check的POST方法的请求体来创建一个检查模板。
