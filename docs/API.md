@@ -435,6 +435,42 @@
 ???question "可以加的功能"
 	- 按照最近访问排序
 
+### 获取医生的所有病人id `<url>/diagnose/patients/{id}`
+
+使用 `GET` 请求
+
+=== "请求体"
+
+	不需要请求体
+
+=== "成功响应"
+
+	```json
+	{
+		"code": 0,
+		"info": "Succeed",
+		"list":	[
+			{
+				"zhangan": "id1",
+			},
+			{
+				"lisi": "id2",
+			},
+			...
+			
+		]
+	}
+	```
+
+=== "失败响应"
+
+	```json
+	{
+		"code": *,
+		"info": "[Some message]"
+	}
+	```
+
 ### 发放查看权限 `<url>/diagnose/grant`
 
 实际上是将患者添加到医生的列表里
