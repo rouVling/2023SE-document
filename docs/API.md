@@ -324,7 +324,8 @@
   	      "educatedYears": 10,//	int, 教育年限
   	      "livingEnv": 1,	//	int, 0->城市，1->农村，2->乡镇
   	      "yearEducatedFift": 8,
-  	      "medicNum": ""
+  	      "medicNum": "",
+		  "doctorIds":[],   //string[]  doctors的id列表
 		}
 		```
 		
