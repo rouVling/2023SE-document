@@ -940,9 +940,49 @@
 	
 - ### `<url>/checkRes`
 
-	该 API 用于操作检查的整体，包括创建检查或按医生/病人查询检查。
+	该 API 用于创建检查。
 	
-	#### GET
+	#### POST
+	
+	根据检查模板id, 患者id以及所分配医生创建一项检查。
+	
+	=== "请求头"
+	
+		需要将 `Authorization` 字段设置为 JWT 令牌
+
+	=== "请求体"
+
+		```JSON
+		{
+			"check_id": "stringId",	//string, 检查模板的_id
+			"patient_id": "就诊卡号",
+			"doctor": "userName",	//string, 分配医生用户名
+		}
+		```
+
+	=== "成功响应"
+
+		```JSON
+		{
+			"code": 0,
+			"info": "Post succeed",
+		}
+		```
+	
+	=== "错误响应"
+
+		```JSON
+		{
+			"code": *,
+			"info": "[Some message]"
+		}
+		```
+
+- ### `<url>/checkResGet`
+
+	该 API 用于按医生/病人查询检查。
+	
+	#### POST
 	
 	获得检查列表。医生用户可以看到自己被分配的检查。
 	
@@ -969,42 +1009,6 @@
 			{ "_id": "stringId", "title": "第一项心智检查", "patient_id": "patient_id1", "doctor": "userName", "creator": "userName", "done": true },
 			{ "_id": "stringId", "title": "第二项心智检查", "patient_id": "patient_id2", "doctor": "userName", "creator": "userName," "done": false },
 			],	//根据请求体搜索得到的对象数组，每个对象代表一项检查，包含检查id, 标题信息, 患者id，负责医生名字，创建者名字以及是否已完成。
-		}
-		```
-	
-	=== "错误响应"
-
-		```JSON
-		{
-			"code": *,
-			"info": "[Some message]"
-		}
-		```
-	
-	#### POST
-	
-	根据检查模板id, 患者id以及所分配医生创建一项检查。
-	
-	=== "请求头"
-	
-		需要将 `Authorization` 字段设置为 JWT 令牌
-
-	=== "请求体"
-
-		```JSON
-		{
-			"check_id": "stringId",	//string, 检查模板的_id
-			"patient_id": "就诊卡号",
-			"doctor": "userName",	//string, 分配医生用户名
-		}
-		```
-
-	=== "成功响应"
-
-		```JSON
-		{
-			"code": 0,
-			"info": "Post succeed",
 		}
 		```
 	
